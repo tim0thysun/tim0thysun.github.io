@@ -1,0 +1,176 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Timothy's HCDE 439 Physical Computing Page!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+
+        <div class="header">
+            <h1>Timothy's Assignment 1!</h1>
+            <img src="a1_done.gif" width=600></a>
+            <p>4 White LEDs turn on one by one in sequence. Left to right, then right to left.</p>
+            <h2>Documentation</h2>
+            <h3>Circuit diagram</h3>
+            <img src="Circuit_diagram_schem.jpg" width=500>
+            <p>These white LEDs have a voltage drop of 3.3V—I calculated the resistance to be 285 Ohms. I use 4 1k Ohm resistors in my circuit but realized that I also had 330 Ohm resistors as well.</p>
+            <h3>Schematic</h3>
+            <img src="Circuit_diagram.jpg" width=500>
+            <p>I used pins 13, 11, 10, and 9 from the Arduino. This is how I laid everything out on the breadboard.</p>
+            <h3>Firmware</h3>
+            <pre>
+    /*
+      A1: Blink!
+      Timothy Sun
+
+      Adapted from code tutorial (http://www.arduino.cc/en/Tutorial/Blink) by 
+      Scott Fitzgerald, Arturo Guadalupi, and Colby Newman
+
+      Turns on 4 LEDs one by one in sequence from left to right,
+      then turns on all 4 LEDs at the same time.
+      Turns on 4 LEDs one by one in sequence from right to left,
+      then turns on all 4 LEDs at the same time.
+      
+    */
+
+    // the setup function runs once when you press reset or power the board
+    void setup() {
+      // initialize digital pin LED_BUILTIN as an output.
+      pinMode(LED_BUILTIN, OUTPUT);
+      // initialize digital pin 9 as an output.
+      pinMode(9, OUTPUT);
+      // initialize digital pin 10 as an output.
+      pinMode(10, OUTPUT);
+      // initialize digital pin 11 as an output.
+      pinMode(11, OUTPUT);
+    }
+
+    // the loop function runs over and over again forever
+    void loop() {
+
+      // turns on LEDS from left to right, one by one (next 8 lines)
+
+      // turn the LED (on pin 13) on by making voltage HIGH
+      digitalWrite(LED_BUILTIN, HIGH);
+      // wait for 0.3 seconds
+      delay(300);
+      // turn the LED (on pin 11) on by making voltage HIGH  
+      digitalWrite(11, HIGH); 
+      // wait for 0.3 seconds
+      delay(300);
+      // turn the LED (on pin 10) on by making voltage HIGH 
+      digitalWrite(10 , HIGH);
+      // wait for 0.3 seconds
+      delay(300);
+      // turn the LED (on pin 9) on by making voltage HIGH     
+      digitalWrite(9, HIGH);
+      // wait for 0.3 seconds
+      delay(300);    
+
+      // turns off all LEDs at once (next 5 lines)
+
+      // turn the LED (on pin 13) off by making voltage LOW
+      digitalWrite(LED_BUILTIN, LOW);
+      // turn the LED (on pin 11) on by making voltage LOW 
+      digitalWrite(11, LOW); 
+      // turn the LED (on pin 10) on by making voltage LOW
+      digitalWrite(10 , LOW);
+      // turn the LED (on pin 9) on by making voltage LOW
+      digitalWrite(9, LOW);
+      // wait for 0.3 seconds  
+      delay(300);
+
+      // turns on all LEDs at once (next 5 lines)
+
+      // turn the LED (on pin 13) on by making voltage HIGH
+      digitalWrite(LED_BUILTIN, HIGH);
+      // turn the LED (on pin 11) on by making voltage HIGH 
+      digitalWrite(11, HIGH); 
+      // turn the LED (on pin 10) on by making voltage HIGH
+      digitalWrite(10 , HIGH);
+      // turn the LED (on pin 9) on by making voltage HIGH
+      digitalWrite(9, HIGH);
+      // wait for 0.3 seconds
+      delay(300);  
+
+      // turns off all LEDs at once (next 5 lines)
+
+      // turn the LED (on pin 13) off by making voltage LOW
+      digitalWrite(LED_BUILTIN, LOW); 
+      // turn the LED (on pin 11) off by making voltage LOW
+      digitalWrite(11, LOW); 
+      // turn the LED (on pin 10) off by making voltage LOW
+      digitalWrite(10 , LOW);
+      // turn the LED (on pin 9) off by making voltage LOW
+      digitalWrite(9, LOW);  
+      // wait for 0.3 seconds
+      delay(300);
+
+      // turns on LEDS from right to left, one by one (next 8 lines)
+
+      // turn the LED (on pin 9) on by making voltage HIGH
+      digitalWrite(9, HIGH);
+      // wait for 0.3 seconds
+      delay(300);  
+      // turn the LED (on pin 10) on by making voltage HIGH
+      digitalWrite(10, HIGH); 
+      // wait for 0.3 seconds
+      delay(300);   
+      // turn the LED (on pin 11) on by making voltage HIGH
+      digitalWrite(11, HIGH);
+      // wait for 0.3 seconds
+      delay(300);   
+      // turn the LED (on pin 13) on by making voltage HIGH   
+      digitalWrite(LED_BUILTIN, HIGH);
+      // wait for 0.3 seconds
+      delay(300);    
+
+      // turns off all LEDs at once (next 5 lines)
+      
+      // turn the LED (on pin 13) off by making voltage LOW
+      digitalWrite(LED_BUILTIN, LOW); 
+      // turn the LED (on pin 11) off by making voltage LOW
+      digitalWrite(11, LOW); 
+      // turn the LED (on pin 10) off by making voltage LOW
+      digitalWrite(10 , LOW);
+      // turn the LED (on pin 9) off by making voltage LOW
+      digitalWrite(9, LOW);  
+      // wait for 0.3 seconds
+      delay(300);
+
+      // turns on all LEDs at once (next 5 lines)
+
+      // turn the LED (on pin 13) on by making voltage HIGH
+      digitalWrite(LED_BUILTIN, HIGH);
+      // turn the LED (on pin 11) on by making voltage HIGH 
+      digitalWrite(11, HIGH); 
+      // turn the LED (on pin 10) on by making voltage HIGH
+      digitalWrite(10 , HIGH);
+      // turn the LED (on pin 9) on by making voltage HIGH
+      digitalWrite(9, HIGH);
+      // wait for 0.3 seconds
+      delay(300);
+
+      // turns off all LEDs at once (next 5 lines)
+      
+      // turn the LED (on pin 13) off by making voltage LOW
+      digitalWrite(LED_BUILTIN, LOW); 
+      // turn the LED (on pin 11) off by making voltage LOW
+      digitalWrite(11, LOW); 
+      // turn the LED (on pin 10) off by making voltage LOW
+      digitalWrite(10 , LOW);
+      // turn the LED (on pin 9) off by making voltage LOW
+      digitalWrite(9, LOW);  
+      // wait for 0.3 seconds
+      delay(300);
+
+    }<code>
+        </div>
+        
+    </body>
+</html>
