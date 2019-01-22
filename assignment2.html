@@ -1,25 +1,111 @@
-<!DOCTYPE html> 
-<html> 
-    <head> 
-        <meta charset="utf-8"> 
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-        <title>Example Student's HCDE 439 Physical Computing Page!</title> 
+        <title>Timothy's Physical Computing Page!</title>
 
         <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
 
-    </head> 
-    <body> 
+    </head>
+    <body>
 
         <div class="header">
-            <h1>Example Student's Assignment 2!</h1>
-            <p>
-            <img src="red-panda.jpg" width=400></a>
-            </p>
-            <p>
-            Here is all the documentation for assignment 2!
-            </p>
+          <article>
+            <h1>Timothy's Assignment 2!</h1>
+            <img src="a_2/a2.gif" width=400></a>
+            <figcaption>Four LEDs fade when the button is pressed.</figcaption>
+            <h2>Hardware</h2>
+              <ul>
+                <li>Arduino Uno</li>
+                <li>4 white LEDs</li>
+                <li>4 330 ohm resistors</li>
+                <li>10k ohm resistor</li>
+                <li>Momentary button</li>
+                <li>Hook-up wires</li>
+                <li>Breadboard</li>
+              </ul>
+            <h2>Circuit</h2>
+            <img src="a_2/a2_bb.png" alt="circuit diagram">
+            <figcaption>Pin 2 is an input which detects voltage changes in the circuit caused by button presses.</figcaption>
+            <h2>Schematic</h2>
+            <img src="a_2/a2_schem.png" alt="circuit schematic">
+            <figcaption>To determine appropriate resistance, I used Ohm's law! The Arduino delivers 5V. The LEDs have a forward voltage of 3.3V. Ergo V = 5 - 3.3 = 1.7V. LED max current is 20mA = 0.02A. R = 1.7V / 0.02A = 85Ω. I used 330Ω resistors becuase that was immediately available at the time. A 10kΩ was used for the button to prevent electrical noise. </figcaption>
+            <h2>Code</h2>
+            <code>/*
+  A2: Lights that Fade!
+  Timothy Sun
+
+  Adapted from Arduino built-in examples: For Loop Iteration, Fade, and Button.
+
+  Four white LEDs are on. When the buttonis pressed, they begin to flash.
+*/
+
+
+// constants won't change. Set pin number.
+const int buttonPin = 2;     // the number of the pushbutton pin
+
+// variables will change:
+int buttonState = 0;         // variable for reading the pushbutton status
+int brightness = 0;          // how bright the LED is
+int fadeAmount = 5;          // how many points to fade the LED by
+
+void setup() {
+  // use a for loop to initialize each pin as an output:
+  for (int thisPin = 6; thisPin < 12; thisPin++) {
+    // initialize thisPin as an output.
+    pinMode(thisPin, OUTPUT);
+    }
+  // initialize the pushbutton .pin as an input:
+  pinMode(buttonPin, INPUT);
+}
+
+void loop() {
+  // read the state of the pushbutton value:
+  buttonState = digitalRead(buttonPin);
+
+  // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+  if (buttonState == HIGH) {
+
+    // use a for loop to turn each LED on:
+    for (int thisPin = 6; thisPin < 12; thisPin++) {
+      // turn LED on:
+      digitalWrite(thisPin, HIGH);
+      }
+
+    // use a for loop to set brightness of thisPin:
+    for (int thisPin = 6; thisPin < 12; thisPin++) {
+    // set the brightness of thisPin:
+      analogWrite(thisPin, brightness);
+      }
+
+    // change the brightness for next time through the loop:
+    brightness = brightness + fadeAmount;
+
+    // reverse the direction of the fading at the ends of the fade:
+    if (brightness <= 0 || brightness >= 255) {
+      fadeAmount = -fadeAmount;
+      }
+
+    // wait for 7 milliseconds to see the dimming effect
+    delay(7);
+    }
+
+  // buttonState is LOW:
+  else {
+
+    // use a for loop to turn each LED off:
+    for (int thisPin = 6; thisPin < 12; thisPin++) {
+      // turn LED off:
+      digitalWrite(thisPin, HIGH);
+    }
+  }
+} </code>
+          </article>
+
+
         </div>
-        
+
     </body>
 </html>
