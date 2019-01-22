@@ -31,7 +31,7 @@
             <figcaption>Pin 2 is an input which detects voltage changes in the circuit caused by button presses.</figcaption>
             <h2>Schematic</h2>
             <img src="a_2/a2_schem.png" width=800>
-            <figcaption>To determine appropriate resistance, I used Ohm's law! The Arduino delivers 5V. The LEDs have a forward voltage of 3.3V. Ergo V = 5 - 3.3 = 1.7V. LED max current is 20mA = 0.02A. R = 1.7V / 0.02A = 85Ω. I used 330Ω resistors because they were immediately available at the time. A 10kΩ resistor was used for the button to prevent electrical noise. </figcaption>
+            <figcaption>To determine appropriate resistance, I used Ohm's law! The Arduino delivers 5V. The LEDs have a forward voltage of 3.3V. Ergo V = 5 - 3.3 = 1.7V. LED max current is 20mA = 0.02A. R = 1.7V / 0.02A = 85Ω. With 100Ω resistors, the LEDs were uncomfortably bright so I used 330Ω resistors instead. A 10kΩ resistor was used for the button to prevent electrical noise. </figcaption>
             <h2>Code</h2>
             <pre>/*
   A2: Lights that Fade!
@@ -76,7 +76,7 @@ void loop() {
 
     // use a for loop to set brightness of thisPin:
     for (int thisPin = 6; thisPin < 12; thisPin++) {
-    // set the brightness of thisPin:
+      // set the brightness of thisPin:
       analogWrite(thisPin, brightness);
       }
 
@@ -85,6 +85,7 @@ void loop() {
 
     // reverse the direction of the fading at the ends of the fade:
     if (brightness <= 0 || brightness >= 255) {
+      // reverse direction of fading:
       fadeAmount = -fadeAmount;
       }
 
