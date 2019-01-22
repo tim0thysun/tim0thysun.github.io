@@ -14,7 +14,7 @@
         <div class="header">
           <article>
             <h1>Timothy's Assignment 2!</h1>
-            <img src="a_2/a2.gif" width=400></a>
+            <img src="a_2/a2.gif" width=600></a>
             <figcaption>Four LEDs fade when the button is pressed.</figcaption>
             <h2>Hardware</h2>
               <ul>
@@ -27,13 +27,13 @@
                 <li>Breadboard</li>
               </ul>
             <h2>Circuit</h2>
-            <img src="a_2/a2_bb.png" alt="circuit diagram">
+            <img src="a_2/a2_bb.png" width="500" alt="circuit diagram">
             <figcaption>Pin 2 is an input which detects voltage changes in the circuit caused by button presses.</figcaption>
             <h2>Schematic</h2>
-            <img src="a_2/a2_schem.png" alt="circuit schematic">
+            <img src="a_2/a2_schem.png" width="500" alt="circuit schematic">
             <figcaption>To determine appropriate resistance, I used Ohm's law! The Arduino delivers 5V. The LEDs have a forward voltage of 3.3V. Ergo V = 5 - 3.3 = 1.7V. LED max current is 20mA = 0.02A. R = 1.7V / 0.02A = 85Ω. I used 330Ω resistors becuase that was immediately available at the time. A 10kΩ was used for the button to prevent electrical noise. </figcaption>
             <h2>Code</h2>
-            <code>/*
+            <pre>/*
   A2: Lights that Fade!
   Timothy Sun
 
