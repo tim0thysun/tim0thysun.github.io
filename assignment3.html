@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Timothy's Physical Computing Page!</title>
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+
+        <div class="header">
+          <article>
+            <h1>Timothy's Assignment 3!</h1>
+            <img src="a_3/a3.gif" width=600></a>
+            <figcaption>2 LEDs alternate lighting up based on ambient brightness.</figcaption>
+            <h2>Hardware</h2>
+              <ul>
+                <li>Arduino Uno</li>
+                <li>2 white LEDs</li>
+                <li>2 330 ohm resistors</li>
+                <li>10k ohm resistor</li>
+                <li>Photo resistor</li>
+                <li>Hook-up wires</li>
+                <li>Breadboard</li>
+              </ul>
+            <h2>Serial monitor</h2>
+            <img src="a_3/serial.gif" width=500>
+            <figcaption>One of two phrases will be printed based on ambient light.</figcaption>
+            <h2>Circuit</h2>
+            <img src="a_3/circuit.png" width=800>
+            <figcaption>The Arduino can't directly measure resistance, so we use a voltage divider so it can interpret changes in voltage.</figcaption>
+            <h2>Schematic</h2>
+            <img src="a_3/schematic.png" width=800>
+            <figcaption>To determine appropriate resistance for LEDs, I used Ohm's law! The Arduino delivers 5V. The LEDs have a forward voltage of 3.3V. Ergo V = 5 - 3.3 = 1.7V. LED max current is 20mA = 0.02A. R = 1.7V / 0.02A = 85Ω. With 100Ω resistors, the LEDs were uncomfortably bright so I used 330Ω resistors instead. For the pull down resistor, 5 V = 200mA(R). Ergo R = 250Ω. I used the 10kΩ.</figcaption>
+            <h2>Voltage divider</h2>
+            <img src="a_3/voltage-out.png" width=800>
+            <figcaption>V out when dark and light.</figcaption>
+
+            <h2>Code</h2>
+            <pre>
+// Set constants for sensor pin, pin 3 and 5.
+const int sensorPin = 0;
+const int led1 = 3;
+const int led2 = 5;
+
+// Sets variables for level of light: high is 0 (0 Volts) and low is 1023 (5 Volts)
+int light, high = 0, low = 1023;
+
+void setup() {
+  // initialize serial communications at 9600 bps:
+  Serial.begin(9600);
+  // Initialize led1 as output
+  pinMode(led1, OUTPUT);
+  // Initialize led2 as output
+  pinMode(led2, OUTPUT);
+}
+
+void loop() {
+  // use analogRead to measure photoresistor pair voltage
+  light = analogRead(sensorPin);
+
+  // if light value is less than low value (1023)
+  if (light < low) {
+    Serial.println("Hello darkness my old friend"); // print this message to serial monitor
+    low = light; // save new low value as light value
+  }
+
+  // if light value is greater than low value (0)
+  if (light > high) {
+    Serial.println("Here comes the sun"); // print this message to serial monitor
+    high = light; // save new high value as light value
+  }
+
+  // analogRead function returns values between 0 and 1023 but analogWrite wants values between 0 and 255.
+  // So we use the map function to "convert" from the higher range to the smaller range
+  light = map(light, low+40, high-40, 0, 255);
+
+  // limits light to between 0 and 255
+  light = constrain(light, 0, 255);
+
+  // Now we'll return to the main loop(), and send light
+  // to the LED.
+  delay(50);
+
+  // brightens led1 when dark
+  analogWrite(led1, 255-light);
+
+  // brightens led2 when light
+  analogWrite(led2, light);
+}
+
+          </article>
+
+
+        </div>
+
+    </body>
+</html>
