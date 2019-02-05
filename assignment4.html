@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Timothy's Physical Computing Page!</title>
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+
+        <div class="header">
+          <article>
+            <h1>Timothy's Assignment 4!</h1>
+            <img src="a_4/a4.gif" width=600></a>
+            <figcaption>LED strip living in a plastic ball.</figcaption>
+            <h2>Hardware</h2>
+              <ul>
+                <li>Arduino Uno</li>
+                <li>LED strip</li>
+                <li>2 10k ohm resistor</li>
+                <li>Photo resistor</li>
+                <li>Hook-up wires</li>
+                <li>Breadboard</li>
+                <li>NPN transistor</li>
+                <li>Power supply</li>
+                <li>Alligator clips (handy but not required)</li>
+              </ul>
+            <h2>Circuit</h2>
+            <img src="a_4/circuit.png" width=800>
+            <figcaption>The Arduino can't directly measure resistance, so we use a voltage divider so it can interpret changes in voltage.</figcaption>
+            <h2>Schematic</h2>
+            <img src="a_4/schematic.png" width=800>
+            <figcaption>For the sake of the schematic (and my sanity), I only included 6 LEDs from the LED strip—in actuality, there were 54. Out of the box, the LED strip has 300 LEDs which uses a total of 18W of power. The piece I cut out had 54 LEDs. To determine the power of 54 LEDs, I can do: 18W / 300 LEDs = xW / 54 LEDs and solve for x. I get 3.24W. Using the power law: P=IV, I can determine how much current will flow through. The power source provides 12V. So 3.24W = I(12V). I get 0.27A of current through the transistor. The transistor can provide max .6A of current. We're under that so it's smooth sailing. <br><br>To determine the resistance value of the pull down resistor in the voltage divider, we have with Ohm's Law: 5V = 200mA(R). Therefore R = 250Ω. I decided to use 10kΩ.</figcaption>
+            <h2>Voltage divider</h2>
+            <img src="a_3/voltage-out.png" width=800>
+            <figcaption>V out when dark and light. (Same implementation as assignment 3)</figcaption>
+
+            <h2>Code</h2>
+            <pre>
+              // Set constants for sensor pin and pin 9.
+              const int sensorPin = 0;
+              const int led = 9;
+
+              // Sets variables for level of light: high is 0 (0 Volts) and low is 1023 (5 Volts)
+              int light, high = 0, low = 1023;
+
+              void setup() {
+                // Initialize led as output
+                pinMode(led, OUTPUT);
+              }
+
+              void loop() {
+                // use analogRead to measure photoresistor pair voltage
+                light = analogRead(sensorPin);
+
+                // if light value is less than low value (1023)
+                if (light < low) {
+                  low = light; // save new low value as light value
+                }
+
+                // if light value is greater than low value (0)
+                if (light > high) {
+                  high = light; // save new high value as light value
+                }
+
+                // analogRead function returns values between 0 and 1023 but analogWrite wants values between 0 and 255.
+                // So we use the map function to "convert" from the higher range to the smaller range
+                light = map(light, low+40, high-40, 0, 255);
+
+                // limits light to between 0 and 255
+                light = constrain(light, 0, 255);
+
+                // Now we'll return to the main loop(), and send light
+                // to the led.
+                delay(50);
+
+                // brightens led when dark
+                analogWrite(led, 255-light);
+              }
+            </code>
+          </article>
+
+
+        </div>
+
+    </body>
+</html>
