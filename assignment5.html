@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Timothy's Physical Computing Page!</title>
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+
+        <div class="header">
+          <article>
+            <h1>Timothy's Assignment 5!</h1>
+            <img src="a_5/a5.gif" width=600></a>
+            <figcaption>A jittery light on a servo.</figcaption>
+            <h2>Hardware</h2>
+              <ul>
+                <li>Arduino Uno</li>
+                <li>Servo motor</li>
+                <li>Joystick</li>
+                <li>Flashlight (optional)</li>
+                <li>Hook-up wires</li>
+                <li>Breadboard</li>
+              </ul>
+            <h2>Circuit</h2>
+            <img src="a_5/circuit.png" width=800>
+            <figcaption>Both the servo motor and joystick are connected to 5V power source. On the joystick, "VERT" and "HORIZ" are both analog. "SEL" is digital. I don't need a switch so I didn't connect "SEL."</figcaption>
+
+            <h2>Schematic</h2>
+            <img src="a_5/schematic.png" width=800>
+            <figcaption>The servo changes position based on the direction in which the joystick is pressed. The biggest possible change in position for the servo is 0 degrees to 180 degrees. According to the servo's <a href="https://components101.com/servo-motor-basics-pinout-datasheet">data sheet</a>, it takes 0.1 seconds to move 60 degrees. Thus, I can calculate the minimum delay it would take for the servo to get to my designated position. I used the biggest differnece in position: from 0 degrees to 180 degrees. (60 degrees / 0.1 seconds) = (180 degrees / x seconds) so x = 0.3 seconds. So I used delay(300).</figcaption>
+
+            <h2>Joystick position values</h2>
+            <img src="a_5/joystick.jpg" width=800>
+            <figcaption>The Arduino's digital to analog converter has a resolution of 10 bits which means we characterize the position values from the joystick between 0 and 1024. So I mapped out the x and y values of the joystick at different press positions.</figcaption>
+
+             We can send these values back to the computer, but then we face the classic problem that the transmission over
+             the communication port has to be made with 8bit values, while our DAC (Digital to Analog Converter -
+             that is messuring the values from the potentiometers in the joystick) has a resolution of 10bits.
+             In other words this means that our sensors are characterized with a value between 0 and 1024.
+
+            <h2>Serial monitor</h2>
+            <img src="a_5/serial-output.gif" width=600>
+            <figcaption>Serial output—values change based on where the joystick is being pressed.</figcaption>
+
+            <h2>Code</h2>
+            <pre>
+              /*
+              8 Feb. 2019
+              Timothy Sun
+
+              A joystick controls the position of a servo!
+              Adapted from Sweep http://www.arduino.cc/en/Tutorial/Sweep
+              */
+
+              #include <Servo.h>  //Arduino servo library
+
+              Servo myservo;  // create servo object to control a servo
+
+              int pos = 0;    // variable to store the servo position
+
+              int x = A0;     // define x as joystick position value read from analog pin 0
+              int y = A1;     // define y as joystick position value read from analog pin 1
+              int xval = 0;   // initialize xval to 0
+              int yval = 0;   // initialize yval to 0
+
+              void setup() {
+                myservo.attach(9);   // attaches the servo on pin 9 to the servo object
+                Serial.begin(9600);  // opens serial port, sets data rate to 9600 bps
+              }
+
+              void loop() {
+                xval = analogRead(x);  // set xval to value read from x, which is analog pin 0
+                yval = analogRead(y);  // set yval to value read from y, which is analog pin 1
+
+                delay(300);  // waits 300 ms for servo to get to position
+
+                if(xval <= 1024 && xval >= 768 && yval <= 768 && yval >= 256) {  // if the joystick is pressed up (perspective is from joystick connected to breadboard)
+                  pos = 45;  // set position to 45 degrees
+                  myservo.write(pos);  // tell servo to go to "pos" position
+                  Serial.println(pos);  // prints servo position to serial monitor
+                  }
+
+                else if(xval <= 256 && xval >= 0 && yval <= 768 && yval >= 256) { // if the joystick is pressed down
+                  pos = 90;  // set position to 90 degrees
+                  myservo.write(pos);  // tell servo to go to "pos" position
+                  Serial.println(pos);  // prints servo position to serial monitor
+                  }
+
+                else if(xval <= 768 && xval >= 256 && yval <= 1024 && yval >= 768) { // if the joystick is pressed right
+                  pos = 180;  // set position to 180 degrees
+                  myservo.write(pos);  // tell servo to go to "pos" position
+                  Serial.println(pos);  // prints servo position to serial monitor
+                  }
+
+                else if(xval <= 768 && xval >= 256 && yval <= 256 && yval >= 0) { // if the joystick is pressed left
+                  pos = 135;  // set position to 135 degrees
+                  myservo.write(pos);  // tell servo to go to "pos" position
+                    Serial.println(pos);  // prints servo position to serial monitor
+                  }
+              }
+              }
+            </code>
+          </article>
+
+
+        </div>
+
+    </body>
+</html>
