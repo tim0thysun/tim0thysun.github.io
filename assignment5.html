@@ -35,12 +35,7 @@
 
             <h2>Joystick position values</h2>
             <img src="a_5/joystick.jpg" width=800>
-            <figcaption>The Arduino's digital to analog converter has a resolution of 10 bits which means we characterize the position values from the joystick between 0 and 1024. So I mapped out the x and y values of the joystick at different press positions.</figcaption>
-
-             We can send these values back to the computer, but then we face the classic problem that the transmission over
-             the communication port has to be made with 8bit values, while our DAC (Digital to Analog Converter -
-             that is messuring the values from the potentiometers in the joystick) has a resolution of 10bits.
-             In other words this means that our sensors are characterized with a value between 0 and 1024.
+            <figcaption>The Arduino's digital to analog converter has a resolution of 10 bits which means we characterize the position values from the joystick between 0 and 1024. So I mapped out the x and y values of the joystick at different press positions and used them to determine positions of the servo motor. As an example, if the position of the joystick is (xval <= 1024 && xval >= 768 && yval <= 768 && yval >= 256), then the servo assumes a position of 45 degrees. </figcaption>
 
             <h2>Serial monitor</h2>
             <img src="a_5/serial-output.gif" width=600>
