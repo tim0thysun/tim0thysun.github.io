@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Timothy's Physical Computing Page!</title>
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+        <div class="header">
+          <article>
+            <h1>Timothy's Assignment 6!</h1>
+            <img src="a_6/a6.gif" width=600></a>
+            <figcaption>A circle changes size based on potentiometer position.</figcaption>
+            <h2>Hardware</h2>
+              <ul>
+                <li>Arduino Uno</li>
+                <li>Potentiometer</li>
+                <li>10K resistor</li>
+                <li>Hook-up wires</li>
+                <li>Breadboard</li>
+              </ul>
+            <h2>Circuit</h2>
+            <img src="a_6/circuit.png" width=800>
+            <figcaption>Potentiometer connected to analog pin 0 in my arduino.</figcaption>
+
+            <h2>Schematic</h2>
+            <img src="a_6/schematic.png" width=800>
+            <figcaption>Schematic view of circuit. I use a 10K resistor because without it, there is the possibility for power to be directly connected to ground (supposing the potentiometer was turned to one end.</figcaption>
+
+            <h2>Code for Arduino</h2>
+            <pre>
+              void setup() {
+                // put your setup code here, to run once:
+                Serial.begin(9600); //initialize serial communications at 9600
+              }
+              
+              void loop() {
+                // put your main code here, to run repeatedly:
+                int pot = analogRead(A0); // Set pot to value read from pin A0
+                int mappedPot = map(pot, 0, 1023, 0, 255); // map values from A0 to between 0 and 255
+                Serial.println(mappedPot); // print the values of mappedPot to serial
+              }
+            </code>
+
+            <h2>Sketch.js</h2>
+            <pre>
+              var serial; // variable to hold an instance of the serialport library
+              var portName = '/dev/cu.usbmodem14601' //rename to the name of your port
+              var circleSize = 10; // set circle size to 10
+              
+              function setup() {
+                serial = new p5.SerialPort();       // make a new instance of the serialport library
+                serial.on('list', printList);       // set a callback function for the serialport list event
+                serial.on('connected', serverConnected); // callback for connecting to the server
+                serial.on('open', portOpen);        // callback for the port opening
+                serial.on('data', serialEvent);     // callback for when new data arrives
+                serial.on('error', serialError);    // callback for errors
+                serial.on('close', portClose);      // callback for the port closing
+               
+                serial.list();                      // list the serial ports
+                serial.open(portName);              // open a serial port
+                createCanvas(1440, 900);            // create background of 1440 by 900
+              }
+               
+              // get the list of ports:
+              function printList(portList) {
+               // portList is an array of serial port names
+               for (var i = 0; i < portList.length; i++) {
+               // Display the list the console:
+                 print(i + " " + portList[i]);
+               }
+              }
+              
+              function serverConnected() { // new function to respond to callback of serverConnected
+                print('connected to server.'); // notification 
+              }
+              
+              function portOpen() { // new function to respond to callback of portOpen
+                print('the serial port opened.'); // notification 
+              }
+               
+              function serialError(err) { // new function to respond to callback of serialError
+                print('Something went wrong with the serial port. ' + err); // notification 
+              }
+               
+              function portClose() { // new function to respond to callback of portClose
+                print('The serial port closed.'); // notification 
+              }
+              
+              function serialEvent() { // new function to respond to callback of serialEvent when new data arrives
+                  var data = serial.read();  // use function serial.read and store that in variable called data
+                  console.log(data); // log data to console
+                  circleSize = data; // set size of circle to data
+              }
+              
+              function draw() { // function draw to draw a circle 
+                  background("#004488"); // blue background
+                  fill("#44AAFF"); // light blue fill
+                  noStroke(); // no border
+                  ellipse(width/2, height/2, circleSize*3, circleSize*3); //draw circle with specified width, height, and circle size which is based on potentiometer
+              } 
+            </code>
+          </article>
+
+
+        </div>
+
+    </body>
+</html>
