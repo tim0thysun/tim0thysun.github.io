@@ -43,11 +43,11 @@
               }
               
               void loop() {
-                int s0 = analogRead(0);             // set s0 to value read analog pin 0
+                int s0 = analogRead(0);             // set s0 to value read analog pin 0 (x value of joystick)
                 delay(1);                           // stabilize analog to digital convertor before it does another read          
-                int s1 = analogRead(1);             // set s1 to value read analog pin 1 (x value of joystick)
+                int s1 = analogRead(1);             // set s1 to value read analog pin 1 (y value of joystick)
                 delay(1);                           // stabilize analog to digital convertor before it does another read
-                int s2 = analogRead(5);             // set s2 to value read analog pin 5 (y value of joystick)
+                int s2 = analogRead(5);             // set s2 to value read analog pin 5 (potentiometer position)
                 delay(1);                           // stabilize analog to digital convertor before it does another read
                 
                                                     // make array
