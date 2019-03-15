@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Final project!</title>
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+        <div class="header">
+          <article>
+            <h1>My final project: What goes around comes around</h1>
+            <img src="final/hero.jpg" width=600></a>
+            <figcaption>Creating an Arduino persistence-of-vision (POV) display</figcaption>
+            
+
+              <h2>Concept</h2>
+              <p>When we look at things, what we see stays in our retinas for about 1/16th of a second. It's called persistence of vision. Knowing this, if we can flash LEDs fast enough in sequence, we can actually display things that appear static. So with 7 LEDs, we can spell out something like "Hello world." It's pretty cool!</p>
+              <img src="final/concept-sketch.jpg" width=600>
+
+              <h2>Video</h2>
+              <iframe id='ivplayer' type='text/html' width='640' height='360'       src='https://invidio.us/embed/Szx65pgXhyw?' frameborder='0'></iframe>
+              <p>There are two problems with my implementation. The first is that the words are backwards. The second is that the words are actually moving with the fan. Ideally, the words should appear as static. They don't because the rate of each fan revolution is not the same as the rate at which the program gets looped through. To solve this, I attached a magnet to the top of the fan as well as a reed switch to the arduino so my program could detect when a full revolution occured. The problem is that the reed switch is a fairly fagile component and I broke the hermetically sealed glass envelope that housed the reed contacts. Unsurprisingly, it didn't work after that.</p>
+
+              <h2>Build-of-Materials</h2>
+              <ul>
+                <li>Arduino Uno</li>
+                <li>Reed switch</li>
+                <li>7 330 Ohm resistors</li>
+                <li>1 printed circuit board</li>
+                <li>7 white LEDs</li>
+                <li>Fan</li>
+                <li>Hook-up wires</li>
+                <li>Breadboard for testing</li>
+                <li>9 volt battery</li>
+                <li>9 volt battery clip</li>
+              </ul>
+
+            <h2>Circuit</h2>
+            <img src="final/circuit.png" width=800>
+            <figcaption>This is the circuit diagram—I couldn't find the PCB I used on Fritzing, so used a breadboard in the diagram instead.</figcaption>
+
+            <h3>PCB & Soldering</h3>
+            <img src="final/circuit-front.jpeg" width=600>
+            <figcaption>I made two different versions of the LED PCBs. I wanted to see how the POV effects would be different based on spacing between each LED. Each LED is soldered to a 330 Ohm resistor. The pins at the top of the PCBs in the picture go into Arduino pins 1–7.</figcaption>
+           
+            <img src="final/circuit-back.jpeg" width=600>
+            <figcaption>The back of each PCB.</figcaption>
+            
+            <img src="final/solder1.jpeg" width=600>
+            <figcaption>Soldering!</figcaption>
+
+            <img src="final/solder2.jpeg" width=600>
+            <figcaption>More soldering!</figcaption>
+
+            <h2>Schematic</h2>
+            <img src="final/schematic.png" width=800>
+            <figcaption>To determine appropriate resistance for LEDs, I used Ohm's law! The Arduino delivers 5V. The LEDs have a forward voltage of 3.3V. Ergo V = 5 - 3.3 = 1.7V. LED max current is 20mA = 0.02A. R = 1.7V / 0.02A = 85Ω. With 100Ω resistors, the LEDs were uncomfortably bright so I used 330Ω resistors instead. You might wonder why there is resistor with the reed switch and that's because the manufacturer built it into the componenet itself.</figcaption>
+
+            <h2>Implementation</h2>
+            <img src="final/implementation.jpeg" width=800>
+            <figcaption>Attaching the arduino to the fan was not as simple a process as I thought. As inelegant as it is, I used a bunch of rubber bands to secure my circuit onto the fan, making sure that it would not fly off at the fan's highest speed.</figcaption>
+
+            <h2>Code</h2>
+            <pre>
+              int timer = 800;      // initialize a timer for delay purposes later on 
+              int State = 0;        // initialize State (for use with reed switch)         
+              int lastState = 0;    // initialize lastState, which is the most recent state from reed switch
+              
+              boolean space[]={0,0,0,0,0,0,0};   // implements a "space" to be used between letters so we can discern them more clearly 
+              
+              boolean H[]={1,1,1,1,1,1,1,0,0,0,1,0,0,0,1,1,1,1,1,1,1};   // boolean value of how 'H' will be displayed on 7 LEDs
+              boolean E[]={1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,0,0,1,0,0,1};   // boolean value of how 'E' will be displayed on 7 LEDs
+              boolean L[]={1,1,1,1,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1};   // boolean value of how 'L' will be displayed on 7 LEDs
+              boolean W[]={1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,0,0,1,0,0,1};   // boolean value of how 'W' will be displayed on 7 LEDs
+              boolean O[]={1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,1,1};   // boolean value of how 'O' will be displayed on 7 LEDs
+              boolean D[]={1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,1,1,1,1,1,0};   // boolean value of how 'D' will be displayed on 7 LEDs
+              boolean R[]={1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,0,0,1,1,1,1};   // boolean value of how 'R' will be displayed on 7 LEDs
+              int pos;  // sets pos variable to be used later
+              
+              void setup() {
+                for (int Pin = 1; Pin <=7; Pin++) {  // loop through each pin
+                  pinMode(Pin, OUTPUT);}             // set each pin as output
+                pinMode(A0, INPUT);                  // set pin A0 as input 
+              }
+              
+              void loop() {
+              State = analogRead(0);                 // set state to analogRead 0 (Reed switch)
+              if (State != lastState){               // if state doesn't equal most recent state,
+                if (State == HIGH){                  // if state is high (there is a magent detected),
+              delayMicroseconds(5000);               // delay by 5000 microseconds 
+              WriteLetter7Width(H);                  // "write out" letter 'H' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(E);                  // "write out" letter 'E' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(L);                  // "write out" letter 'L' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(L);                  // "write out" letter 'L' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(O);                  // "write out" letter 'O' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(W);                  // "write out" letter 'W' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(O);                  // "write out" letter 'O' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(R);                  // "write out" letter 'R' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(L);                  // "write out" letter 'L' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              WriteLetter7Width(D);                  // "write out" letter 'D' with WriteLetter7 function
+              Space(space);                          // "write out" space with Space function
+              lastState = State;                     // update lastState with newer State
+              }
+              
+              void WriteLetter7Width(boolean letter[]){       // WriteLetter6 function takes in letter
+                pos=0;                                        // sets pos to 0
+                for (int n=0; n<=7; n++){                     // Loops through from 0 to 7
+                for (int Pin = 1; Pin <=7; Pin++) {           // Loops through each LED pin
+                  digitalWrite(Pin, letter[pos]);             // digitalWrite to the current pin the letter at pos 
+                  pos=pos+1;}                                 // updates pos by adding one (this traverses through the arrays above where the boolean values are set)
+                  delayMicroseconds(timer);}}                 // delay by timer value
+               
+               void Space(boolean letter[]){                  // Function takes in letter (this is only actually used for spaces between letters)
+                pos=0;                                        // sets pos to 0
+                 for (int Pin = 1; Pin <=7; Pin++) {          // Loops through from 0 to 7
+                  digitalWrite(Pin, space[pos]);              // digitalWrite to the current pin the letter at pos  
+                  pos=pos+1;}                                 // updates pos by adding one (this traverses through the arrays above where the boolean values are set)
+                  delayMicroseconds(timer);}                  // delay by timer value
+            </code>
+
+          
+          </article>
+
+
+        </div>
+
+    </body>
+</html>
